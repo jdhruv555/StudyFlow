@@ -1,19 +1,19 @@
 import { Stats } from "@/components/dashboard/Stats";
-import { ProjectList } from "@/components/dashboard/ProjectList";
+import { TaskList } from "@/components/dashboard/TaskList";
 
-const Index = () => {
+export default function Index() {
   return (
     <div className="space-y-8">
       <div>
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
         <p className="text-muted-foreground">
-          Overview of your projects and performance
+          Welcome back! Here's an overview of your academic progress.
         </p>
       </div>
       <Stats />
-      <ProjectList />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <TaskList />
+      </div>
     </div>
   );
-};
-
-export default Index;
+}

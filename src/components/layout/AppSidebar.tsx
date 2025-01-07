@@ -1,4 +1,4 @@
-import { Home, Clock, Users, FileText, Settings } from "lucide-react";
+import { BookOpen, Calendar, Target, DollarSign, Users, BarChart, Brain, Settings } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,10 +11,13 @@ import {
 } from "@/components/ui/sidebar";
 
 const menuItems = [
-  { title: "Dashboard", icon: Home, url: "/" },
-  { title: "Time Tracking", icon: Clock, url: "/time" },
-  { title: "Clients", icon: Users, url: "/clients" },
-  { title: "Invoices", icon: FileText, url: "/invoices" },
+  { title: "Dashboard", icon: BarChart, url: "/" },
+  { title: "Academic Planner", icon: BookOpen, url: "/academic" },
+  { title: "Calendar", icon: Calendar, url: "/calendar" },
+  { title: "Goals & Habits", icon: Target, url: "/goals" },
+  { title: "Finances", icon: DollarSign, url: "/finances" },
+  { title: "Social Hub", icon: Users, url: "/social" },
+  { title: "Wellness", icon: Brain, url: "/wellness" },
   { title: "Settings", icon: Settings, url: "/settings" },
 ];
 
@@ -23,7 +26,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <div className="px-6 py-4">
-          <h1 className="text-xl font-bold text-primary">TaskFlow</h1>
+          <h1 className="text-xl font-bold text-primary">StudyFlow</h1>
         </div>
         <SidebarGroup>
           <SidebarGroupContent>
