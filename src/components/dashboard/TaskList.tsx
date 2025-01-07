@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -20,13 +20,23 @@ import { Calendar, CheckCircle2, Plus, Trash2, AlertTriangle, Flag } from "lucid
 import { useDashboard } from "@/contexts/DashboardContext";
 import { useState } from "react";
 
+type TaskPriority = "low" | "medium" | "high";
+
+interface NewTask {
+  title: string;
+  course: string;
+  dueDate: string;
+  priority: TaskPriority;
+  description: string;
+}
+
 export function TaskList() {
   const { tasks, toggleTaskStatus, addTask, deleteTask, updateTaskPriority, updateTaskDescription } = useDashboard();
-  const [newTask, setNewTask] = useState({
+  const [newTask, setNewTask] = useState<NewTask>({
     title: "",
     course: "",
     dueDate: "",
-    priority: "medium" as const,
+    priority: "medium",
     description: "",
   });
   const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
@@ -201,4 +211,5 @@ export function TaskList() {
       </CardContent>
     </Card>
   );
+
 }
