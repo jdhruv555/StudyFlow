@@ -1,5 +1,6 @@
 import { Stats } from "@/components/dashboard/Stats";
 import { TaskList } from "@/components/dashboard/TaskList";
+import { ProjectList } from "@/components/dashboard/ProjectList";
 import { DashboardProvider } from "@/contexts/DashboardContext";
 
 export default function Index() {
@@ -15,6 +16,7 @@ export default function Index() {
         <Stats />
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <TaskList />
+          <ProjectList />
         </div>
       </div>
     </DashboardProvider>

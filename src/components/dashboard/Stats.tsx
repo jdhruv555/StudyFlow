@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { BookOpen, Clock, Target, Trophy } from "lucide-react";
+import { BookOpen, Clock, Target, Trophy, Users, Calendar, Bell } from "lucide-react";
 import { useState } from "react";
 import { useDashboard } from "@/contexts/DashboardContext";
 
@@ -30,9 +30,10 @@ export function Stats() {
       value: stats.gpa,
       key: "gpa" as const,
       icon: Trophy,
-      subtitle: "+0.2 from last semester",
+      subtitle: "Target: 4.0",
       max: 4.0,
       step: 0.1,
+      description: "Your current Grade Point Average",
     },
     {
       title: "Study Hours",
@@ -42,15 +43,17 @@ export function Stats() {
       subtitle: "This week",
       max: 168,
       step: 0.5,
+      description: "Total hours spent studying",
     },
     {
       title: "Assignments",
       value: stats.assignments,
       key: "assignments" as const,
       icon: BookOpen,
-      subtitle: "3 due this week",
+      subtitle: `${stats.upcomingDeadlines} due this week`,
       max: 100,
       step: 1,
+      description: "Total pending assignments",
     },
     {
       title: "Goals Progress",
@@ -60,13 +63,44 @@ export function Stats() {
       subtitle: "Monthly target",
       max: 100,
       step: 1,
+      description: "Progress towards your academic goals",
+    },
+    {
+      title: "Courses Enrolled",
+      value: stats.coursesEnrolled || 0,
+      key: "coursesEnrolled" as const,
+      icon: Users,
+      subtitle: "Current semester",
+      max: 10,
+      step: 1,
+      description: "Number of courses you're taking",
+    },
+    {
+      title: "Attendance Rate",
+      value: stats.attendanceRate || 0,
+      key: "attendanceRate" as const,
+      icon: Calendar,
+      subtitle: "Semester average",
+      max: 100,
+      step: 1,
+      description: "Your class attendance percentage",
+    },
+    {
+      title: "Upcoming Deadlines",
+      value: stats.upcomingDeadlines || 0,
+      key: "upcomingDeadlines" as const,
+      icon: Bell,
+      subtitle: "Next 7 days",
+      max: 50,
+      step: 1,
+      description: "Number of upcoming due dates",
     },
   ];
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {statsConfig.map((stat) => (
-        <Card key={stat.key} className="bg-card/50 backdrop-blur">
+        <Card key={stat.key} className="bg-card/50 backdrop-blur hover:bg-card/60 transition-colors">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
             <stat.icon className="h-4 w-4 text-muted-foreground" />
@@ -76,14 +110,21 @@ export function Stats() {
               <DialogTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start p-0 hover:bg-transparent"
+                  className="w-full justify-start p-0 hover:bg-transparent group"
                   onClick={() => {
                     setEditKey(stat.key);
                     setEditValue(stat.value);
                   }}
                 >
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <p className="text-xs text-muted-foreground">{stat.subtitle}</p>
+                  <div className="space-y-1">
+                    <div className="text-2xl font-bold group-hover:text-primary transition-colors">
+                      {stat.value}
+                    </div>
+                    <p className="text-xs text-muted-foreground">{stat.subtitle}</p>
+                    <p className="text-xs text-muted-foreground hidden group-hover:block">
+                      {stat.description}
+                    </p>
+                  </div>
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -92,6 +133,7 @@ export function Stats() {
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid gap-2">
+                    <p className="text-sm text-muted-foreground">{stat.description}</p>
                     <Input
                       type="number"
                       value={editValue}
