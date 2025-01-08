@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, Target, DollarSign, Users, BarChart, Brain, Settings } from "lucide-react";
+import { BookOpen, Calendar, Target, Brain, Settings, BarChart } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -9,14 +9,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Link } from "react-router-dom";
 
 const menuItems = [
   { title: "Dashboard", icon: BarChart, url: "/" },
   { title: "Academic Planner", icon: BookOpen, url: "/academic" },
   { title: "Calendar", icon: Calendar, url: "/calendar" },
   { title: "Goals & Habits", icon: Target, url: "/goals" },
-  { title: "Finances", icon: DollarSign, url: "/finances" },
-  { title: "Social Hub", icon: Users, url: "/social" },
   { title: "Wellness", icon: Brain, url: "/wellness" },
   { title: "Settings", icon: Settings, url: "/settings" },
 ];
@@ -34,10 +33,10 @@ export function AppSidebar() {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url} className="flex items-center space-x-2">
+                    <Link to={item.url} className="flex items-center space-x-2">
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

@@ -6,6 +6,11 @@ import { Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import Index from "./pages/Index";
+import Academic from "./pages/Academic";
+import CalendarPage from "./pages/Calendar";
+import Goals from "./pages/Goals";
+import Wellness from "./pages/Wellness";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +25,11 @@ const App = () => (
           <main className="flex-1 p-8">
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/academic" element={<Academic />} />
+              <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/goals" element={<Goals />} />
+              <Route path="/wellness" element={<Wellness />} />
+              <Route path="/settings" element={<Settings />} />
             </Routes>
           </main>
         </div>
