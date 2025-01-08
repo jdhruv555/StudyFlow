@@ -9,7 +9,7 @@ interface Setting {
   title: string;
   description: string;
   enabled: boolean;
-  category: 'notifications' | 'preferences';
+  category: 'notifications';
 }
 
 export default function Settings() {
@@ -34,20 +34,6 @@ export default function Settings() {
       description: 'Receive wellness check-in reminders',
       enabled: false,
       category: 'notifications'
-    },
-    {
-      id: '4',
-      title: 'Dark Mode',
-      description: 'Toggle dark mode theme',
-      enabled: true,
-      category: 'preferences'
-    },
-    {
-      id: '5',
-      title: 'Compact View',
-      description: 'Use compact layout for dashboard',
-      enabled: false,
-      category: 'preferences'
     }
   ]);
 
@@ -66,10 +52,10 @@ export default function Settings() {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-sans mb-2">
+        <h2 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-white to-red-500 bg-clip-text text-transparent font-sans mb-2 uppercase">
           Settings
         </h2>
-        <p className="text-lg text-muted-foreground font-medium">
+        <p className="text-lg text-white font-medium uppercase">
           Customize your StudyFlow experience
         </p>
       </div>
@@ -82,30 +68,6 @@ export default function Settings() {
           <CardContent className="space-y-4">
             {settings
               .filter(setting => setting.category === 'notifications')
-              .map(setting => (
-                <div key={setting.id} className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>{setting.title}</Label>
-                    <p className="text-sm text-muted-foreground">
-                      {setting.description}
-                    </p>
-                  </div>
-                  <Switch
-                    checked={setting.enabled}
-                    onCheckedChange={() => toggleSetting(setting.id)}
-                  />
-                </div>
-              ))}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Preferences</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {settings
-              .filter(setting => setting.category === 'preferences')
               .map(setting => (
                 <div key={setting.id} className="flex items-center justify-between">
                   <div className="space-y-0.5">
