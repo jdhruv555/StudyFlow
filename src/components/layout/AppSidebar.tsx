@@ -4,7 +4,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -25,7 +24,9 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <div className="px-6 py-4">
-          <h1 className="text-xl font-bold text-primary">StudyFlow</h1>
+          <h1 className="text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent tracking-wider">
+            STUDYFLOW
+          </h1>
         </div>
         <SidebarGroup>
           <SidebarGroupContent>
