@@ -11,13 +11,13 @@ export default function Academic() {
           <h2 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-sans mb-2">
             Academic Planner
           </h2>
-          <p className="text-muted-foreground">
-            Manage your academic schedule and assignments effectively
+          <p className="text-lg text-muted-foreground font-medium">
+            Customize and manage your academic journey effectively
           </p>
         </div>
         
         <Tabs defaultValue="schedule" className="space-y-4">
-          <TabsList>
+          <TabsList className="bg-card/50 backdrop-blur">
             <TabsTrigger value="schedule">Schedule</TabsTrigger>
             <TabsTrigger value="courses">Courses</TabsTrigger>
             <TabsTrigger value="assignments">Assignments</TabsTrigger>

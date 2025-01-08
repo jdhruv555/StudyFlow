@@ -1,88 +1,101 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { Plus, Edit2 } from "lucide-react";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+
+interface Goal {
+  id: string;
+  title: string;
+  target: number;
+  current: number;
+  type: 'study' | 'habit' | 'longterm';
+}
 
 export default function Goals() {
+  const [goals, setGoals] = useState<Goal[]>([
+    {
+      id: '1',
+      title: 'Daily Study Hours',
+      target: 8,
+      current: 6,
+      type: 'study'
+    },
+    {
+      id: '2',
+      title: 'Weekly Assignments',
+      target: 5,
+      current: 4,
+      type: 'habit'
+    }
+  ]);
+
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+
+  const handleUpdateGoal = (goalId: string, updates: Partial<Goal>) => {
+    setGoals(goals.map(goal => 
+      goal.id === goalId ? { ...goal, ...updates } : goal
+    ));
+    toast.success("Goal updated successfully");
+  };
+
   return (
     <div className="space-y-8">
       <div>
         <h2 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-sans mb-2">
           Goals & Habits
         </h2>
-        <p className="text-muted-foreground">
-          Track your academic goals and build productive habits
+        <p className="text-lg text-muted-foreground font-medium">
+          Set and track your personal academic goals
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Study Goals</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span>Daily Study Hours</span>
-                  <span>6/8 hours</span>
+        {goals.map(goal => (
+          <Card key={goal.id} className="hover:bg-card/60 transition-colors">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>{goal.title}</CardTitle>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Edit Goal</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <Input
+                      placeholder="Current progress"
+                      type="number"
+                      value={goal.current}
+                      onChange={(e) => handleUpdateGoal(goal.id, { current: Number(e.target.value) })}
+                    />
+                    <Input
+                      placeholder="Target"
+                      type="number"
+                      value={goal.target}
+                      onChange={(e) => handleUpdateGoal(goal.id, { target: Number(e.target.value) })}
+                    />
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>{goal.current}</span>
+                  <span>{goal.target}</span>
                 </div>
-                <Progress value={75} />
+                <Progress value={(goal.current / goal.target) * 100} />
               </div>
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span>Weekly Assignments</span>
-                  <span>4/5 completed</span>
-                </div>
-                <Progress value={80} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Habits Tracker</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-4">
-              <li className="flex items-center justify-between">
-                <span>Morning Study Session</span>
-                <span className="text-green-500">✓ Done</span>
-              </li>
-              <li className="flex items-center justify-between">
-                <span>Review Notes</span>
-                <span className="text-yellow-500">Pending</span>
-              </li>
-              <li className="flex items-center justify-between">
-                <span>Practice Problems</span>
-                <span className="text-green-500">✓ Done</span>
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Long-term Goals</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-4">
-              <li>
-                <div className="flex justify-between mb-1">
-                  <span>Maintain 3.8 GPA</span>
-                  <span>90%</span>
-                </div>
-                <Progress value={90} />
-              </li>
-              <li>
-                <div className="flex justify-between mb-1">
-                  <span>Research Project</span>
-                  <span>60%</span>
-                </div>
-                <Progress value={60} />
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );
