@@ -24,7 +24,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <div className="px-6 py-4">
-          <h1 className="text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent tracking-wider">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-red-500 to-white bg-clip-text text-transparent tracking-wider uppercase">
             STUDYFLOW
           </h1>
         </div>
@@ -34,9 +34,9 @@ export function AppSidebar() {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link to={item.url} className="flex items-center space-x-2">
+                    <Link to={item.url} className="flex items-center space-x-2 hover:text-red-400 transition-colors">
                       <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
+                      <span className="font-medium">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

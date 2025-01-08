@@ -52,27 +52,27 @@ export default function Settings() {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-white to-red-500 bg-clip-text text-transparent font-sans mb-2 uppercase">
+        <h2 className="text-4xl font-bold tracking-tight uppercase bg-gradient-to-r from-white to-red-500 bg-clip-text text-transparent font-sans mb-2">
           Settings
         </h2>
         <p className="text-lg text-white font-medium uppercase">
-          Customize your StudyFlow experience
+          Customize Your Notifications
         </p>
       </div>
 
       <div className="grid gap-4">
-        <Card>
+        <Card className="bg-secondary/50 backdrop-blur">
           <CardHeader>
-            <CardTitle>Notifications</CardTitle>
+            <CardTitle className="text-2xl font-bold text-white">Notifications</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             {settings
               .filter(setting => setting.category === 'notifications')
               .map(setting => (
                 <div key={setting.id} className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>{setting.title}</Label>
-                    <p className="text-sm text-muted-foreground">
+                    <Label className="text-lg font-medium text-white">{setting.title}</Label>
+                    <p className="text-sm text-gray-300">
                       {setting.description}
                     </p>
                   </div>
