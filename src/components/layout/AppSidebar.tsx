@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, Target, Brain, Settings, BarChart } from "lucide-react";
+import { BookOpen, Calendar, Target, Brain, Settings, BarChart, Timer, BookMarked, Star, Bell } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -19,14 +19,22 @@ const menuItems = [
   { title: "Settings", icon: Settings, url: "/settings" },
 ];
 
+const quickAccessItems = [
+  { title: "Study Timer", icon: Timer, url: "/timer" },
+  { title: "Bookmarks", icon: BookMarked, url: "/bookmarks" },
+  { title: "Important", icon: Star, url: "/important" },
+  { title: "Notifications", icon: Bell, url: "/notifications" },
+];
+
 export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
         <div className="px-6 py-4">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-red-500 to-white bg-clip-text text-transparent tracking-wider uppercase">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-red-500 bg-clip-text text-transparent tracking-wider uppercase mb-2">
             STUDYFLOW
           </h1>
+          <p className="text-sm text-muted-foreground">Your Academic Companion</p>
         </div>
         <SidebarGroup>
           <SidebarGroupContent>
@@ -34,9 +42,12 @@ export function AppSidebar() {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link to={item.url} className="flex items-center space-x-2 hover:text-red-400 transition-colors">
-                      <item.icon className="h-4 w-4" />
-                      <span className="font-medium">{item.title}</span>
+                    <Link 
+                      to={item.url} 
+                      className="flex items-center space-x-2 hover:bg-red-500/10 px-4 py-2 rounded-lg transition-colors"
+                    >
+                      <item.icon className="h-5 w-5 text-red-400" />
+                      <span className="font-medium text-foreground/90">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -44,6 +55,29 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        <div className="mt-8 px-6">
+          <h2 className="text-sm font-semibold text-muted-foreground mb-4 uppercase">Quick Access</h2>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {quickAccessItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <Link 
+                        to={item.url} 
+                        className="flex items-center space-x-2 hover:bg-red-500/10 px-4 py-2 rounded-lg transition-colors"
+                      >
+                        <item.icon className="h-4 w-4 text-red-400" />
+                        <span className="font-medium text-sm text-foreground/80">{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </div>
       </SidebarContent>
     </Sidebar>
   );
