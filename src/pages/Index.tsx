@@ -232,5 +232,3 @@ export default function Index() {
     </DashboardProvider>
   );
 }
-
-export default Index;
