@@ -7,17 +7,34 @@ import { Button } from "@/components/ui/button";
 import { Clock, ExternalLink } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Index() {
   const [studyTimer, setStudyTimer] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(false);
+  const [currentSubject, setCurrentSubject] = useState<string>("");
+  const [studyRecords, setStudyRecords] = useState<Record<string, number>>({});
+
+  const subjects = [
+    "Mathematics",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "Computer Science",
+    "Literature",
+    "History",
+  ];
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
-    if (isTimerActive) {
+    if (isTimerActive && currentSubject) {
       interval = setInterval(() => {
         setStudyTimer((prev) => prev + 1);
+        setStudyRecords(prev => ({
+          ...prev,
+          [currentSubject]: (prev[currentSubject] || 0) + 1
+        }));
       }, 1000);
     }
 
@@ -26,14 +43,19 @@ export default function Index() {
         clearInterval(interval);
       }
     };
-  }, [isTimerActive]);
+  }, [isTimerActive, currentSubject]);
 
   const toggleTimer = () => {
+    if (!currentSubject && !isTimerActive) {
+      toast.error("Please select a subject first!");
+      return;
+    }
+    
     setIsTimerActive(!isTimerActive);
     if (!isTimerActive) {
-      toast.success("Study timer started!");
+      toast.success(`Started studying ${currentSubject}`);
     } else {
-      toast.info(`Study session ended: ${formatTime(studyTimer)}`);
+      toast.info(`Study session for ${currentSubject} ended: ${formatTime(studyTimer)}`);
     }
   };
 
@@ -52,19 +74,14 @@ export default function Index() {
 
   const quickLinks = [
     {
-      title: "Course Materials",
-      url: "https://www.coursera.org/",
-      description: "Access free online courses and materials"
-    },
-    {
-      title: "Resources",
+      title: "Study Materials",
       url: "https://www.khanacademy.org/",
-      description: "Free educational resources and practice exercises"
+      description: "Access free educational resources"
     },
     {
-      title: "Help Center",
-      url: "https://stackoverflow.com/",
-      description: "Get help from the developer community"
+      title: "Practice Exercises",
+      url: "https://www.brilliant.org/",
+      description: "Interactive learning and problem solving"
     }
   ];
 
@@ -86,14 +103,29 @@ export default function Index() {
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-white">Study Timer</CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center justify-between">
-            <div className="text-4xl font-bold text-white font-mono">
-              {formatTime(studyTimer)}
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-4">
+              <Select value={currentSubject} onValueChange={setCurrentSubject}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Select subject" />
+                </SelectTrigger>
+                <SelectContent>
+                  {subjects.map((subject) => (
+                    <SelectItem key={subject} value={subject}>
+                      {subject}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="text-4xl font-bold text-white font-mono">
+                {formatTime(studyTimer)}
+              </div>
             </div>
             <div className="space-x-2">
               <Button
                 onClick={toggleTimer}
                 className="bg-red-500 hover:bg-red-600 text-white"
+                disabled={!currentSubject && !isTimerActive}
               >
                 <Clock className="mr-2 h-4 w-4" />
                 {isTimerActive ? 'Stop' : 'Start'} Timer
@@ -106,6 +138,19 @@ export default function Index() {
                 Reset
               </Button>
             </div>
+            {Object.keys(studyRecords).length > 0 && (
+              <div className="mt-4 space-y-2">
+                <h3 className="text-lg font-semibold text-white">Study Records</h3>
+                <div className="grid gap-2">
+                  {Object.entries(studyRecords).map(([subject, time]) => (
+                    <div key={subject} className="flex justify-between items-center bg-secondary/30 p-2 rounded">
+                      <span className="text-white">{subject}</span>
+                      <span className="text-white font-mono">{formatTime(time)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -118,7 +163,7 @@ export default function Index() {
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-white">Quick Links</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {quickLinks.map((link) => (
               <a
                 key={link.title}
