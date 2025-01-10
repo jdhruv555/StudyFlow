@@ -222,9 +222,15 @@ export default function Index() {
         </div>
 
         <footer className="py-6 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} StudyFlow. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} StudyFlow by Dhruv Jha. All rights reserved.</p>
+          <p className="mt-1 text-xs">
+            This application and its contents are protected by copyright law. Any unauthorized reproduction, 
+            distribution, or modification of this application or its contents is strictly prohibited.
+          </p>
         </footer>
       </div>
     </DashboardProvider>
   );
 }
+
+export default Index;
