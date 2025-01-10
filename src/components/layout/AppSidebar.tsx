@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, Target, Brain, Settings, BarChart, Timer, BookMarked, Star, Bell } from "lucide-react";
+import { BookOpen, Calendar, Target, Brain, Settings, BarChart, Timer, BookMarked } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -19,11 +19,10 @@ const menuItems = [
   { title: "Settings", icon: Settings, url: "/settings" },
 ];
 
+// Updated quick access items to show only study-related features
 const quickAccessItems = [
   { title: "Study Timer", icon: Timer, url: "/timer" },
-  { title: "Bookmarks", icon: BookMarked, url: "/bookmarks" },
-  { title: "Important", icon: Star, url: "/important" },
-  { title: "Notifications", icon: Bell, url: "/notifications" },
+  { title: "Study Materials", icon: BookMarked, url: "/bookmarks" },
 ];
 
 export function AppSidebar() {
