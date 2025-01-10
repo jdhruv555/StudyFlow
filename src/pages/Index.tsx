@@ -4,26 +4,37 @@ import { ProjectList } from "@/components/dashboard/ProjectList";
 import { DashboardProvider } from "@/contexts/DashboardContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Clock, ExternalLink } from "lucide-react";
+import { Clock, ExternalLink, Plus, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { format } from "date-fns";
+
+interface StudySession {
+  subject: string;
+  duration: number;
+  startTime: string;
+  endTime: string;
+  date: string;
+}
 
 export default function Index() {
   const [studyTimer, setStudyTimer] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [currentSubject, setCurrentSubject] = useState<string>("");
-  const [studyRecords, setStudyRecords] = useState<Record<string, number>>({});
+  const [studyRecords, setStudyRecords] = useState<StudySession[]>([]);
+  const [newSubject, setNewSubject] = useState("");
+  const [startTime, setStartTime] = useState<string>("");
 
-  const subjects = [
-    "Mathematics",
-    "Physics",
-    "Chemistry",
-    "Biology",
-    "Computer Science",
-    "Literature",
-    "History",
-  ];
+  const addSubject = () => {
+    if (newSubject.trim()) {
+      setCurrentSubject(newSubject.trim());
+      setNewSubject("");
+      toast.success(`Added new subject: ${newSubject}`);
+    } else {
+      toast.error("Please enter a subject name");
+    }
+  };
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -31,10 +42,6 @@ export default function Index() {
     if (isTimerActive && currentSubject) {
       interval = setInterval(() => {
         setStudyTimer((prev) => prev + 1);
-        setStudyRecords(prev => ({
-          ...prev,
-          [currentSubject]: (prev[currentSubject] || 0) + 1
-        }));
       }, 1000);
     }
 
@@ -47,22 +54,36 @@ export default function Index() {
 
   const toggleTimer = () => {
     if (!currentSubject && !isTimerActive) {
-      toast.error("Please select a subject first!");
+      toast.error("Please select or add a subject first!");
       return;
     }
     
-    setIsTimerActive(!isTimerActive);
     if (!isTimerActive) {
+      setStartTime(new Date().toISOString());
       toast.success(`Started studying ${currentSubject}`);
     } else {
+      const endTime = new Date().toISOString();
+      setStudyRecords(prev => [...prev, {
+        subject: currentSubject,
+        duration: studyTimer,
+        startTime: startTime,
+        endTime: endTime,
+        date: format(new Date(), 'yyyy-MM-dd')
+      }]);
       toast.info(`Study session for ${currentSubject} ended: ${formatTime(studyTimer)}`);
     }
+    setIsTimerActive(!isTimerActive);
   };
 
   const resetTimer = () => {
     setStudyTimer(0);
     setIsTimerActive(false);
     toast.info("Timer reset");
+  };
+
+  const deleteRecord = (index: number) => {
+    setStudyRecords(prev => prev.filter((_, i) => i !== index));
+    toast.success("Study record deleted");
   };
 
   const formatTime = (seconds: number) => {
@@ -74,14 +95,14 @@ export default function Index() {
 
   const quickLinks = [
     {
-      title: "Study Materials",
+      title: "Study Resources",
       url: "https://www.khanacademy.org/",
-      description: "Access free educational resources"
+      description: "Free educational resources and practice exercises"
     },
     {
-      title: "Practice Exercises",
-      url: "https://www.brilliant.org/",
-      description: "Interactive learning and problem solving"
+      title: "Research Papers",
+      url: "https://scholar.google.com/",
+      description: "Access academic papers and research materials"
     }
   ];
 
@@ -105,18 +126,18 @@ export default function Index() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
-              <Select value={currentSubject} onValueChange={setCurrentSubject}>
-                <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="Select subject" />
-                </SelectTrigger>
-                <SelectContent>
-                  {subjects.map((subject) => (
-                    <SelectItem key={subject} value={subject}>
-                      {subject}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="flex-1 flex gap-2">
+                <Input
+                  type="text"
+                  placeholder="Add new subject"
+                  value={newSubject}
+                  onChange={(e) => setNewSubject(e.target.value)}
+                  className="flex-1"
+                />
+                <Button onClick={addSubject} size="icon">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
               <div className="text-4xl font-bold text-white font-mono">
                 {formatTime(studyTimer)}
               </div>
@@ -138,14 +159,30 @@ export default function Index() {
                 Reset
               </Button>
             </div>
-            {Object.keys(studyRecords).length > 0 && (
+            {studyRecords.length > 0 && (
               <div className="mt-4 space-y-2">
                 <h3 className="text-lg font-semibold text-white">Study Records</h3>
                 <div className="grid gap-2">
-                  {Object.entries(studyRecords).map(([subject, time]) => (
-                    <div key={subject} className="flex justify-between items-center bg-secondary/30 p-2 rounded">
-                      <span className="text-white">{subject}</span>
-                      <span className="text-white font-mono">{formatTime(time)}</span>
+                  {studyRecords.map((record, index) => (
+                    <div key={index} className="flex justify-between items-center bg-secondary/30 p-2 rounded">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-white font-semibold">{record.subject}</span>
+                          <span className="text-sm text-gray-400">({record.date})</span>
+                        </div>
+                        <div className="text-sm text-gray-400">
+                          {format(new Date(record.startTime), 'HH:mm')} - {format(new Date(record.endTime), 'HH:mm')}
+                        </div>
+                        <div className="text-white font-mono">{formatTime(record.duration)}</div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteRecord(index)}
+                        className="text-red-400 hover:text-red-300"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -156,35 +193,33 @@ export default function Index() {
 
         <div className="grid gap-4 md:grid-cols-2">
           <TaskList />
-          <ProjectList />
+          <Card className="bg-secondary/50 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-white">Quick Links</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 gap-4">
+              {quickLinks.map((link) => (
+                <a
+                  key={link.title}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <Card className="h-full hover:bg-secondary/70 transition-colors">
+                    <CardContent className="p-4 flex flex-col space-y-2">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-lg">{link.title}</h3>
+                        <ExternalLink className="h-4 w-4" />
+                      </div>
+                      <p className="text-sm text-muted-foreground">{link.description}</p>
+                    </CardContent>
+                  </Card>
+                </a>
+              ))}
+            </CardContent>
+          </Card>
         </div>
-
-        <Card className="bg-secondary/50 backdrop-blur">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-white">Quick Links</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {quickLinks.map((link) => (
-              <a
-                key={link.title}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
-                <Card className="h-full hover:bg-secondary/70 transition-colors">
-                  <CardContent className="p-4 flex flex-col space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-lg">{link.title}</h3>
-                      <ExternalLink className="h-4 w-4" />
-                    </div>
-                    <p className="text-sm text-muted-foreground">{link.description}</p>
-                  </CardContent>
-                </Card>
-              </a>
-            ))}
-          </CardContent>
-        </Card>
 
         <footer className="py-6 text-center text-sm text-muted-foreground">
           <p>© {new Date().getFullYear()} StudyFlow. All rights reserved.</p>
