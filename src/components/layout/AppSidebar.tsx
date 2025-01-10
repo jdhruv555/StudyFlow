@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, Target, Brain, Settings, BarChart, Timer, BookMarked } from "lucide-react";
+import { BookOpen, Calendar, Target, Brain, Settings, BarChart, Timer, BookMarked, LogIn, LogOut } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -8,7 +8,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { createClient } from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
+import { toast } from "sonner";
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 const menuItems = [
   { title: "Dashboard", icon: BarChart, url: "/" },
@@ -19,13 +27,41 @@ const menuItems = [
   { title: "Settings", icon: Settings, url: "/settings" },
 ];
 
-// Updated quick access items to show only study-related features
 const quickAccessItems = [
   { title: "Study Timer", icon: Timer, url: "/timer" },
   { title: "Study Materials", icon: BookMarked, url: "/bookmarks" },
 ];
 
 export function AppSidebar() {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check active session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast.success('Logged out successfully');
+      navigate('/login');
+    } catch (error) {
+      toast.error('Error logging out');
+    }
+  };
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -76,6 +112,26 @@ export function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+        </div>
+
+        <div className="mt-auto px-6 pb-6">
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center space-x-2 hover:bg-red-500/10 px-4 py-2 rounded-lg transition-colors"
+            >
+              <LogOut className="h-5 w-5 text-red-400" />
+              <span className="font-medium text-foreground/90">Logout</span>
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="w-full flex items-center space-x-2 hover:bg-red-500/10 px-4 py-2 rounded-lg transition-colors"
+            >
+              <LogIn className="h-5 w-5 text-red-400" />
+              <span className="font-medium text-foreground/90">Login</span>
+            </Link>
+          )}
         </div>
       </SidebarContent>
     </Sidebar>
