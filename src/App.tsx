@@ -11,6 +11,9 @@ import CalendarPage from "./pages/Calendar";
 import Goals from "./pages/Goals";
 import Wellness from "./pages/Wellness";
 import Settings from "./pages/Settings";
+import StudyTimer from "./pages/StudyTimer";
+import StudyMaterials from "./pages/StudyMaterials";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -24,12 +27,15 @@ const App = () => (
           <AppSidebar />
           <main className="flex-1 p-8">
             <Routes>
+              <Route path="/login" element={<Login />} />
               <Route path="/" element={<Index />} />
               <Route path="/academic" element={<Academic />} />
               <Route path="/calendar" element={<CalendarPage />} />
               <Route path="/goals" element={<Goals />} />
               <Route path="/wellness" element={<Wellness />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/timer" element={<StudyTimer />} />
+              <Route path="/bookmarks" element={<StudyMaterials />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
